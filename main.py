@@ -57,6 +57,7 @@ def save_processed_order(order_id):
 
 
 # Google Drive authentication
+'''
 gauth = GoogleAuth()
 gauth.LoadCredentialsFile("mycreds.txt")
 
@@ -69,7 +70,7 @@ else:
 gauth.SaveCredentialsFile("mycreds.txt")
 
 drive = GoogleDrive(gauth)
-
+'''
 def get_url(filename, folder_id):
     file = drive.CreateFile({'title': filename, 'parents': [{'id': folder_id}]})
     file.SetContentFile(filename)
@@ -87,7 +88,7 @@ def get_url(filename, folder_id):
 
 # Time constants
 seconds_per_hour = 3600
-update_interval = 48
+update_interval = 24
 unix_time_since_last_update = int(time.time()) - update_interval * seconds_per_hour
 
 # Twilio
@@ -172,7 +173,7 @@ for order in personal_orders:
     with open(output_pdf_path, "wb") as pdf_file:
         pdf_file.write(invoice_pdf_data)
     
-    pdf_url = get_url(output_pdf_path, folder_id)
+    #pdf_url = get_url(output_pdf_path, folder_id)
 
     cargus_awb_data = {
         "method": 'getOrderPackages',
@@ -195,7 +196,7 @@ for order in personal_orders:
         "Detalii colet: \n\n"
         f"Livrare estimata: {estimated_delivery} \n"
         "Plata: ramburs\n\n"
-        f"Factura: {pdf_url}\n\n"
+        #f"Factura: {pdf_url}\n\n"
         f"AWB: {package_numbers}\n\n"
         "Spor la lucru!"
     )
@@ -203,7 +204,7 @@ for order in personal_orders:
     recipient = os.getenv('PERSONAL_PHONE_NUMBER') if TEST_MODE else client_phone_number
 
     try:
-        
+        print('message')
         message = client.messages.create(
             from_='+18564741965',
             body=message_body,
